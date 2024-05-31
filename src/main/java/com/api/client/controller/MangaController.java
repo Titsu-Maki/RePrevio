@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +20,7 @@ import com.api.client.service.MangaService;
 @RequestMapping("/mangas")
 public class MangaController {
 
-	 private final MangaService mangaService;
+	  private final MangaService mangaService;
 
 	    @Autowired
 	    public MangaController(MangaService mangaService) {
@@ -48,6 +50,26 @@ public class MangaController {
             return ResponseEntity.ok(mangaDTO);
         } else {
             return ResponseEntity.status(404).body("{\"error\":true,\"msg\":\"Objeto no encontrado\"}");
+        }
+    }
+    
+    @PostMapping
+    public ResponseEntity<?> createManga(@RequestBody MangaDTO mangaDTO) throws Exception {
+        try {
+            Manga manga = mangaService.createManga(mangaDTO);
+            return ResponseEntity.ok(new MangaDTO(
+                    manga.getId(),
+                    manga.getNombre(),
+                    manga.getFechaLanzamiento(),
+                    manga.getTemporadas(),
+                    manga.getPais().getNombre(),
+                    manga.isAnime(),
+                    manga.isJuego(),
+                    manga.isPelicula(),
+                    manga.getTipo().getNombre()
+            ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("{\"error\":true,\"msg\":\"" + e.getMessage() + "\"}");
         }
     }
 }
