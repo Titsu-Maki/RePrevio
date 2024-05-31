@@ -1,6 +1,7 @@
 package com.api.client.serviceImpl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,11 @@ public class MangaServiceImpl implements MangaService {
     @Override
     public List<Manga> getAllMangas() {
         return mangaRepository.findAll();
+    }
+
+
+    @Override
+    public Optional<Manga> getMangaById(Long id) {
+        return mangaRepository.findById(id);
     }
 }
