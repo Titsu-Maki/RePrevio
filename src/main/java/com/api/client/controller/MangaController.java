@@ -5,9 +5,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,6 +70,36 @@ public class MangaController {
                     manga.isPelicula(),
                     manga.getTipo().getNombre()
             ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("{\"error\":true,\"msg\":\"" + e.getMessage() + "\"}");
+        }
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizarManga(@PathVariable Long id, @RequestBody MangaDTO mangaDTO) {
+        try {
+            Manga manga = mangaService.actualizarManga(id, mangaDTO);
+            return ResponseEntity.ok(new MangaDTO(
+                    manga.getId(),
+                    manga.getNombre(),
+                    manga.getFechaLanzamiento(),
+                    manga.getTemporadas(),
+                    manga.getPais().getNombre(),
+                    manga.isAnime(),
+                    manga.isJuego(),
+                    manga.isPelicula(),
+                    manga.getTipo().getNombre()
+            ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("{\"error\":true,\"msg\":\"" + e.getMessage() + "\"}");
+        }
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarManga(@PathVariable Long id) {
+        try {
+            mangaService.eliminarManga(id);
+            return ResponseEntity.ok("{\"msg\":\"Manga eliminado\"}");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("{\"error\":true,\"msg\":\"" + e.getMessage() + "\"}");
         }

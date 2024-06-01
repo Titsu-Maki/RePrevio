@@ -13,4 +13,12 @@ public interface MangaService {
     Optional<Manga> getMangaById(Long id);
     
     Manga createManga(MangaDTO mangaDTO) throws Exception;
+    
+    Manga actualizarManga(Long id, MangaDTO mangaDTO);
+    
+    void eliminarManga(Long id);
+    
+    List<MangaDTO> obtenerFavoritosPorUsuario(String username);
+    
+    void eliminarFavorito(String username, Long mangaId);
 }
